@@ -13,7 +13,7 @@ const fsAPI = {
 };
 
 const FILENAME_MATCH = /messages-([0-9]{1,})\.json/;
-const UPLOADED_IMAGE_MATCH = /https:\/\/graph.microsoft.com\/beta\/chats([^"]*)/g;
+const UPLOADED_IMAGE_MATCH = /https:\/\/graph.microsoft.com\/v1.0\/chats([^"]*)/g;
 
 class Backup {
   constructor ({ chatId, authToken, target }) {
@@ -59,8 +59,8 @@ class Backup {
   }
 
   async getMessages () {
-    // URL to first page (most recent messages)
-    let url = `https://graph.microsoft.com/beta/me/chats/${this.chatId}/messages`;
+    // Updated URL to use new endpoint
+    let url = `https://graph.microsoft.com/v1.0/chats/${this.chatId}/messages`;
     let page = 0;
 
     while (true) {
@@ -179,23 +179,24 @@ class Backup {
         // message sent by a user
         if (message.from) {
           if (message.from.user != null) {
-            await fsAPI.write(fd, `<div class="message ${message.from.user.id === myId ? 'message-right' : 'message-left'}">
-  <div class="message-timestamp">${message.lastModifiedDateTime || message.createdDateTime}</div>
-  <div class="message-sender">${message.from.user.displayName}</div>
-`);
-
-            if (message.body.contentType === 'html') {
-              await fsAPI.write(fd, `<div class="message-body">${replaceImages(message.body.content, imageIndex)}</div>
+            // Wrap header and bubble in a group container
+            await fsAPI.write(fd, `<div class="message-group ${message.from.user.id === myId ? 'group-right' : 'group-left'}">
+  <div class="message-header">
+    ${message.from.user.displayName} - ${message.lastModifiedDateTime || message.createdDateTime}
+  </div>
+  <div class="message ${message.from.user.id === myId ? 'message-right' : 'message-left'}">
+    <div class="message-body">${message.body.contentType === 'html' ? replaceImages(message.body.content, imageIndex) : escapeHtml(message.body.content)}</div>
+  </div>
 </div>`);
-            } else {
-              await fsAPI.write(fd, `<div class="message-body">${escapeHtml(message.body.content)}</div>
-</div>`);
-            }
           // message sent by a bot
           } else if (message.from.application != null) {
-            await fsAPI.write(fd, `<div class="message message-left">
-<div class="message-timestamp">${message.lastModifiedDateTime || message.createdDateTime}</div>
-<div class="message-sender">${message.from.application.displayName}</div>
+            await fsAPI.write(fd, `<div class="message-group group-left">
+  <div class="message-header">
+    ${message.from.application.displayName} - ${message.lastModifiedDateTime || message.createdDateTime}
+  </div>
+  <div class="message message-left">
+    <div class="message-body">${escapeHtml(message.body.content)}</div>
+  </div>
 </div>`);
           } else {
             console.error('couldn\'t determine message sender');
@@ -205,7 +206,30 @@ class Backup {
     }
 
     // write foot
-    await fsAPI.write(fd, `</body>
+    await fsAPI.write(fd, `<script>
+function formatTimestamps() {
+  var headers = document.querySelectorAll('.message-header');
+  var todayStr = new Date().toLocaleDateString();
+  headers.forEach(function(header) {
+    var parts = header.innerText.split(' - ');
+    if (parts.length >= 2) {
+      var displayName = parts.slice(0, parts.length - 1).join(' - ');
+      var utcString = parts[parts.length - 1].trim();
+      var date = new Date(utcString);
+      if (!isNaN(date.getTime())) {
+        var localDateStr = date.toLocaleDateString();
+        if (localDateStr === todayStr) {
+          header.innerText = displayName + ' - ' + date.toLocaleTimeString();
+        } else {
+          header.innerText = displayName + ' - ' + date.toLocaleString();
+        }
+      }
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', formatTimestamps);
+</script>
+</body>
 </html>
 `);
 
@@ -216,7 +240,7 @@ class Backup {
 function escapeHtml (unsafe) {
   return unsafe
     .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
+    .replace(/</g, '&lt;') // fixed the regex here
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');

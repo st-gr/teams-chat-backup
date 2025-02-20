@@ -32,7 +32,7 @@ This will ask several questions:
 
 1. Go to [https://teams.microsoft.com](https://teams.microsoft.com)
 2. Go to the chat you'd like to export.
-3. Copy chat ID from URL. It looks like `19:<uuid of one user>-<uuid of other user>@unq.gbl.spaces`
+3. Copy chat ID from URL or use network trace. It looks like `19:<uuid of one user>-<uuid of other user>@unq.gbl.spaces` not only the UUID also include the 19: and the @unq.gbl.spaces
 
 **Auth token (JWT)** - this is needed for calling Microsoft Graph APIs.
 

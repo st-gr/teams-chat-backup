@@ -1,33 +1,107 @@
 body {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  font-size: 14px;
+  background-color: #ffffff;  /* Light background so the chat bubbles stand out */
+  margin: 0;
+  padding: 20px;
 }
 
 .message {
-  border: 1px solid #ccc;
-  margin: 10px;
-  padding: 8px;
-  font-size: 12px;
+  display: block;   /* Changed from inline-block */
+  width: fit-content;  /* Better than 'auto' for this use case */
+  max-width: 60%;
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+  word-wrap: break-word;
+  background-color: #f0f0f0;  /* Default background for left messages */
 }
 
+/* Left-side messages */
 .message-left {
-  margin-right: 40%;
+  background-color: #f0f0f0;  /* Explicit background for left messages */
 }
 
+/* Right-side messages */
 .message-right {
-  margin-left: 40%;
+  background-color: #e8ebfa;  /* Different background for right messages */
+  margin-left: auto; 
 }
 
-.message-timestamp {
-  float: left;
-  margin-right: 20px;
-  color: #aaa;
-}
-
+/* Sender name in bold, just above the message text */
 .message-sender {
-  margin-bottom: 8px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;                /* Darker text color for contrast */
+}
+
+/* Timestamp in smaller, lighter text. 
+   Remove float so it stacks neatly above/below or we can position it absolutely if we like. */
+.message-timestamp {
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Ensure paragraphs within the message body have standard spacing */
+.message-body p {
+  margin: 0;
+  padding: 0;
 }
 
 img {
-  max-width:720px !important;
-  height:auto !important;
+  max-width: 720px !important;
+  height: auto !important;
+}
+
+.message-header {
+  font-size: 12px;       /* Increased font size */
+  color: gray;
+  margin: 4px 0 -8px 0;    /* Reduced vertical spacing */
+  /* Default alignment is left */
+}
+
+.header-right {
+  text-align: right;     /* Align header content with right-aligned bubble */
+}
+
+.header-left {
+  text-align: left;
+}
+
+.message-group {
+  width: 100%;
+  margin-bottom: 10px;
+  display: flex;  /* Changed to flex */
+  flex-direction: column;  /* Stack children vertically */
+}
+
+.group-right {
+  align-items: flex-end;  /* Align children to the right */
+}
+
+.group-left {
+  align-items: flex-start;  /* Align children to the left */
+}
+
+/* Remove these as they're no longer needed with flexbox */
+.group-right .message,
+.group-left .message {
+  /* float: none; - Remove this */
+  margin: 10px 0;
+}
+
+/* Simplify these as alignment is handled by flex container */
+.group-right .message-header {
+  width: 100%;
+  text-align: right;
+}
+
+.group-left .message-header {
+  width: 100%;
+  text-align: left;
 }
