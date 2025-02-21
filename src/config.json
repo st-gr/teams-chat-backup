@@ -1,0 +1,22 @@
+{
+    "cdn": {
+        "assetsPath": "evergreen-assets/personal-expressions",
+        "baseUrl": "https://statics.teams.cdn.office.net",
+        "emoticons": {
+            "emoticonAssetVersion": "6b74d88f0e134d96b5f93d9dcb99f8bf",
+            "path": "{version}/assets/emoticons/{id}/default/30_f.png",
+            "queryParams": {
+                "v": "{etag}"
+            },
+            "version": "v2"
+        },
+        "metadata": {
+            "path": "{version}/metadata/{emoticonAssetVersion}/en-us.json",
+            "version": "v1"
+        }
+    },
+    "output": {
+        "directory": "assets/emoticons",
+        "metadataFile": "en-us.json"
+    }
+}

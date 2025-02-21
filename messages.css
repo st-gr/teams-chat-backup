@@ -105,3 +105,97 @@ img {
   width: 100%;
   text-align: left;
 }
+
+/* Collapsed group styles for subsequent bubbles */
+.group-right-collapsed, .group-left-collapsed {
+  margin-top: -26px;
+}
+
+/* Attachment "card" style */
+.attachment {
+  display: inline-block;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 10px 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  position: relative;       /* Establish a positioning context */
+  padding-left: 14px;       /* Add left padding to accommodate the line */
+}
+
+.attachment::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: 2px;
+  background-color: #c7c7c7;
+}
+
+/* Now the attachment uses .message-sender, .message-timestamp, and .message-body defined above */
+
+/* Attachment container inside the message bubble */
+.attachment-container {
+  margin-bottom: 0px;  /* Minimal gap between attachments and message body */
+}
+
+/* Use the same styling for attachment sender and timestamp as regular messages */
+/* (If needed, override .attachment .attachment-sender and .attachment .attachment-timestamp here) */
+
+/* New attachment header style */
+.attachment-header {
+  font-size: 11px;       /* Slightly smaller than regular message-header */
+  color: gray;
+  margin: -4px 0 4px 0;    /* Tighter vertical spacing; positioned a bit higher */
+  text-align: left;
+  /* Remove font-weight bold */
+}
+
+/* Reaction containers inside the message bubble */
+.reaction-left {
+  position: absolute;
+  bottom: -23px;  /* half of the image height (20px/2) to overlap */
+  left: 8px;
+}
+
+.reaction-right {
+  position: absolute;
+  bottom: -23px;
+  right: 8px;
+}
+
+/* Scaled-down reaction image embedded in an oval */
+.scaled-image {
+  width: 20px;
+  height: auto;
+  object-fit: cover;
+}
+
+/* New style for reaction oval container */
+.reaction-oval {
+  width: 36px;
+  height: 26px;
+  border: 1px solid #ccc;
+  border-radius: 42%;  /* Oval/circular container */
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+table[itemprop="copy-paste-table"] {
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: #ffffff;
+  width: auto;
+}
+
+table[itemprop="copy-paste-table"] td {
+  border: 1px solid #ccc;
+  padding: 2px 4px;
+  vertical-align: middle;
+  text-align: left;
+}
